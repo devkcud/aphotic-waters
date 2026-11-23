@@ -1,0 +1,16 @@
+/.gradle/
+/build/
+
+/run/
+/src/generated/resources/.cache/
+
+/.classpath
+/.factorypath
+/.project
+/.settings/
+/bin/
+/*.launch
+
+/.idea/
+*.iml
+/out/

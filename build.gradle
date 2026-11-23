@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '7.0.40'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+final String modId = project.name
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+    exclude '.cache/**'
+}
+
+minecraft {
+    runs {
+        configureEach {
+            workingDir = layout.projectDirectory.dir("run/${name}")
+            systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
+            systemProperty 'forge.enabledGameTestNamespaces', modId
+        }
+
+        register('client')
+        register('server') {
+            args '--nogui'
+        }
+        register('gameTestServer')
+        register('data') {
+            args '--mod', modId, '--all',
+                    '--output', layout.projectDirectory.dir('src/generated/resources'),
+                    '--existing', layout.projectDirectory.dir('src/main/resources')
+        }
+    }
+}
+
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+}
+
+dependencies {
+    implementation minecraft.dependency("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
+    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.6'
+}
+
+final Map metadata = [modId: modId, modVersion: version, minecraftVersion: minecraftVersion, forgeVersion: forgeVersion]
+
+tasks.named('processResources') {
+    inputs.properties(metadata)
+    filesMatching('META-INF/mods.toml') {
+        expand(metadata)
+    }
+}
