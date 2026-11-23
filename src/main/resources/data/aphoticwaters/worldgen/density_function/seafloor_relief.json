@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:spline",
+  "spline": {
+    "coordinate": {
+      "type": "minecraft:noise",
+      "noise": "aphoticwaters:formations",
+      "xz_scale": 1.0,
+      "y_scale": 0.0
+    },
+    "points": [
+      { "location": -1.0, "value": -0.10, "derivative": 0.0 },
+      { "location": -0.50, "value": -0.20, "derivative": -0.24 },
+      { "location": -0.41, "value": -0.43, "derivative": -0.35 },
+      { "location": -0.24, "value": -0.48, "derivative": -0.12 },
+      { "location": 0.08, "value": -0.50, "derivative": 0.0 },
+      { "location": 0.26, "value": -0.43, "derivative": 0.7 },
+      { "location": 0.43, "value": -0.26, "derivative": 1.2 },
+      { "location": 0.60, "value": -0.035, "derivative": 0.8 },
+      { "location": 0.66, "value": -0.02, "derivative": 0.0 },
+      { "location": 0.80, "value": -0.29, "derivative": -0.6 },
+      { "location": 0.94, "value": -0.34, "derivative": 0.0 }
+    ]
+  }
+}

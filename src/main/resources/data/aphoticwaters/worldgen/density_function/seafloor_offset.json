@@ -11,7 +11,7 @@
       "right": {
         "type": "minecraft:mul",
         "left": "aphoticwaters:basin_weight",
-        "right": -0.48
+        "right": "aphoticwaters:seafloor_relief"
       }
     }
   }
