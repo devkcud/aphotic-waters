@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:add",
+    "left": "minecraft:overworld/offset",
+    "right": {
+      "type": "minecraft:mul",
+      "left": {
+        "type": "minecraft:blend_alpha"
+      },
+      "right": {
+        "type": "minecraft:mul",
+        "left": "aphoticwaters:basin_weight",
+        "right": -0.48
+      }
+    }
+  }
+}
