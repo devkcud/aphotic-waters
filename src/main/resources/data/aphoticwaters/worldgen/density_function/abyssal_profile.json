@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:spline",
+    "spline": {
+      "coordinate": {
+        "type": "minecraft:noise",
+        "noise": "aphoticwaters:ocean_plates",
+        "xz_scale": 1.0,
+        "y_scale": 0.0
+      },
+      "points": [
+        { "location": -0.5, "value": -1.2, "derivative": 0.0 },
+        { "location": -0.22, "value": -1.18, "derivative": 0.0 },
+        { "location": -0.13, "value": -1.1, "derivative": 0.0 },
+        { "location": -0.045, "value": -1.37, "derivative": -0.5 },
+        { "location": 0.0, "value": -1.38, "derivative": 0.0 },
+        { "location": 0.045, "value": -1.37, "derivative": 0.5 },
+        { "location": 0.14, "value": -1.04, "derivative": 2.0 },
+        { "location": 0.23, "value": -0.62, "derivative": 0.0 }
+      ]
+    }
+  }
+}

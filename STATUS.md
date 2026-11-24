@@ -1,7 +1,13 @@
 # Ocean terrain
 
-The larger oceans and submerged mountains passed in-game review. The active work is continental shelves, steep shelf breaks, abyssal plains and open seafloor trenches in the default Overworld.
+Continental shelves, steep drop-offs, abyssal plains and trenches in the default Overworld await human in-game review. The extra terrain shaping fades out between Y −48 and −56 to retain the underlying basin floor near lava level.
 
-The shallow shelf now extends to a narrow outer break. Across three seeds, the median floor in the outer shelf band rose from Y 11 to Y 46 (467 base columns). On seed `0` at X 416, the shelf extends over 240 blocks before descending into the basin.
+The build and headless Forge test passed. Across three seeds, all 487 sampled trench centerline columns had continuous water to the floor. Fresh Forge chunks also reproduced the previously validated seed-0 crater floor at Y −24 and its western rim at Y 31.
 
-Next, shape low-relief plains and long, water-filled trenches inside the basins. Measure their extent and recheck the existing seamounts. Verify the terrain in a disposable Forge world before handing it off for in-game review.
+Use spectator mode in a fresh default world with seed `0` for the remaining visual checks.
+
+| Feature | Teleport | What to inspect |
+| --- | --- | --- |
+| Continental shelf | `/tp @s -224 52 -312` | Head north. The floor drops from Y 46 to Y −4 over 32 blocks. |
+| Abyssal plain | `/tp @s 1536 -15 -512` | Follow the Z axis. A 1,664-block section has a median floor of Y −26. |
+| Trench | `/tp @s -1033 -30 -1311` | The floor lies at Y −48 along a winding trench traced for about 2,100 blocks. |

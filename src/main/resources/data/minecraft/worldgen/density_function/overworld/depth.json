@@ -8,5 +8,10 @@
     "to_coordinate": 320,
     "to_value": -1.5
   },
-  "right": "aphoticwaters:seafloor_offset"
+  "right": {
+    "type": "minecraft:lerp",
+    "alpha": "aphoticwaters:abyssal_blend",
+    "first": "aphoticwaters:basin_offset",
+    "second": "aphoticwaters:seafloor_offset"
+  }
 }

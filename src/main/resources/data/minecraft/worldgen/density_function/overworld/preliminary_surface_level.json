@@ -50,7 +50,7 @@
     },
     "right": -0.390625
   },
-  "lower_bound": -64,
+  "lower_bound": -56,
   "upper_bound": {
     "type": "minecraft:clamp",
     "input": {
