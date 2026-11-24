@@ -1,26 +1,19 @@
 # Ocean terrain
 
-Sandy and snowy beaches now use a gentler coastal profile. Continentalness controls the slope and roughness. Erosion and ridge noise fade the profile out on rocky shores and in river valleys.
+Regional noise blends calm offshore shelves into rugged ridges and small islands. Deep regions keep the abyssal plains and trenches. The blend uses the existing continentalness mask and fades out from Y −48 to −56.
 
-The packaged Forge check passed. Across three seed-0 shoreline samples, exposed sand columns rose from 134 to 619 and adjacent height steps of three blocks or more fell from 277 to 26. A two-seed terrain probe matched all sampled stony shore, river, abyss and trench heights. It found one steep step at the edge of the river mouth near X −48, Z 1990.
+Across 10,979 offshore base columns from seeds `0`, `42`, and `2026`, the share at Y 0 or lower fell from 93% to 42%. Floors at Y 32–62 rose from 1% to 21%. The deepest sampled floor reached Y −58. All 11,651 columns outside the basin mask matched the previous build. In the deep-profile regions, 3,715 of 3,716 sampled columns matched.
 
-The deep ocean floor passed in-game review. Submerged cliffs use the same rock palette on stone and deepslate up to the water surface. The scan follows connected ocean water across biome boundaries and under ice, and requires a solid block above. Frozen cliffs and the transition across Y 0 await review in fresh chunks.
+The build and packaged Forge check passed. A fresh seed-0 world generated a calm shelf with 25 blocks of water, an island crest at Y 71, an abyssal plain with 87 blocks of water, and a trench with 110 blocks of water. The two beach controls and the crater floor and rim matched their previous heights.
 
-In the two seed-0 views below, generated andesite now spans Y −7 to 6 and diorite spans Y −2 to 5. All 15,136 sampled submerged seafloor heights around the views matched the previous build. Some overlapping vanilla deposits varied with chunk order in both builds.
-
-Continental shelves, steep drop-offs, abyssal plains and trenches in the default Overworld await human in-game review. The extra terrain shaping fades out between Y −48 and −56 to retain the underlying basin floor near lava level.
-
-The cliff pass reads 768 floor heights per eligible chunk and reuses the populated surface heightmap. Its nine focused cases passed.
-
-Across three seeds, all 487 sampled trench centerline columns had continuous water to the floor. Fresh Forge chunks also reproduced the previously validated seed-0 crater floor at Y −24 and its western rim at Y 31.
-
-Use spectator mode in a fresh default world with seed `0` for the remaining visual checks.
+Human visual review is pending for the new regional terrain, gentler beaches, frozen cliffs, and cliff rock across Y 0. Use spectator mode in a fresh default world with seed `0`.
 
 | Feature | Teleport | What to inspect |
 | --- | --- | --- |
+| Calm shelf | `/tp @s 128 51 -512` | The floor is at Y 37. Head west toward the island ridges. |
+| Rugged shelf and islands | `/tp @s -192 80 -448` | Follow the ridge and adjacent submerged valleys. The crest rises to Y 71. |
+| Abyssal plain | `/tp @s -1024 -12 -256` | Head west. The floor stays near Y −25. |
+| Trench and drop-off | `/tp @s -960 -30 -512` | The floor is at Y −48. Head west toward X −1040 to see the wall rise to the surface. |
 | Sandy beach | `/tp @s -162 69 1521` | Follow the sand into the shallows. Check the nearby shore at X −97, Z 1723 and the river-mouth ledge at X −48, Z 1990. |
 | Andesite wall | `/tp @s 384.048 -1.891 548.735 78.6 3.2` | Follow the andesite across Y 0 at X 376, Z 555. |
 | Diorite wall | `/tp @s 374.729 -1.891 530.015 47.4 5.3` | Check the diorite band at X 365, Z 540. |
-| Continental shelf | `/tp @s -224 52 -312` | Head north. The floor drops from Y 46 to Y −4 over 32 blocks. |
-| Abyssal plain | `/tp @s 1536 -15 -512` | Follow the Z axis. A 1,664-block section has a median floor of Y −26. |
-| Trench | `/tp @s -1033 -30 -1311` | The floor lies at Y −48 along a winding trench traced for about 2,100 blocks. |

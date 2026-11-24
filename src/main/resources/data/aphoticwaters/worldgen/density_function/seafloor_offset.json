@@ -1,13 +1,23 @@
 {
   "type": "minecraft:cache",
   "input": {
-    "type": "minecraft:min",
-    "left": "aphoticwaters:basin_offset",
-    "right": {
+    "type": "minecraft:lerp",
+    "alpha": "aphoticwaters:shelf_weight",
+    "first": {
+      "type": "minecraft:min",
+      "left": "aphoticwaters:basin_offset",
+      "right": {
+        "type": "minecraft:lerp",
+        "alpha": "aphoticwaters:basin_weight",
+        "first": "aphoticwaters:beach_offset",
+        "second": "aphoticwaters:abyssal_profile"
+      }
+    },
+    "second": {
       "type": "minecraft:lerp",
       "alpha": "aphoticwaters:basin_weight",
       "first": "aphoticwaters:beach_offset",
-      "second": "aphoticwaters:abyssal_profile"
+      "second": "aphoticwaters:shelf_profile"
     }
   }
 }
