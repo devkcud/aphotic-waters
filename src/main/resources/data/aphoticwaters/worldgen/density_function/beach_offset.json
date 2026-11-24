@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:lerp",
+    "alpha": "aphoticwaters:beach_weight",
+    "first": "minecraft:overworld/offset",
+    "second": {
+      "type": "minecraft:spline",
+      "spline": {
+        "coordinate": "minecraft:overworld/continents",
+        "points": [
+          { "location": -0.34, "value": -0.62375, "derivative": 0.0 },
+          { "location": -0.26, "value": -0.574, "derivative": 0.8 },
+          { "location": -0.19, "value": -0.533, "derivative": 0.6 },
+          { "location": -0.11, "value": -0.476, "derivative": 0.45 },
+          { "location": -0.07, "value": -0.45, "derivative": 0.0 }
+        ]
+      }
+    }
+  }
+}

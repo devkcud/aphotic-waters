@@ -171,7 +171,8 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
         return lowest;
     }
 
-    private static boolean facesOcean(final WorldGenLevel level, final BlockPos pos, final BlockPos.MutableBlockPos probe,
+    private static boolean facesOcean(final WorldGenLevel level, final BlockPos pos,
+            final BlockPos.MutableBlockPos probe,
             final int[] floors, final int index, final int seaY) {
         final int y = pos.getY();
 
