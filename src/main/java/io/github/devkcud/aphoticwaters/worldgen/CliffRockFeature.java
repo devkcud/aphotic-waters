@@ -65,7 +65,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
             final int margin = z < 0 || z >= SIZE ? 0 : REACH;
 
             for (int x = -margin; x < SIZE + margin; x++) {
-                final int floor = floorHeight(level, probe, startX + x, startZ + z);
+                final int floor = floorHeight(level, probe, startX + x, startZ + z, seaY);
                 floors[index(x, z)] = floor;
                 hasSubmergedFloor |= floor < seaY;
             }
@@ -132,7 +132,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
     }
 
     private static int floorHeight(final WorldGenLevel level, final BlockPos.MutableBlockPos probe,
-            final int x, final int z) {
+            final int x, final int z, final int seaY) {
         final int minY = level.getMinY();
         int y = level.getHeight(Heightmap.Types.OCEAN_FLOOR, x, z) - 1;
 
@@ -140,10 +140,11 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
             return y;
         }
 
+        final var chunk = level.getChunk(probe);
         while (--y >= minY) {
-            final BlockState state = level.getBlockState(probe.setY(y));
+            final BlockState state = chunk.getBlockState(probe.setY(y));
 
-            if (!isIceCover(state) && !isOpenWater(state)) {
+            if (!isIceCover(state) && !isOpenWater(state) && !(y > seaY && state.isAir())) {
                 break;
             }
         }
