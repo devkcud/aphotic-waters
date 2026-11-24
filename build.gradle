@@ -13,6 +13,8 @@ sourceSets.main.resources {
 }
 
 minecraft {
+    useDefaultAccessTransformer()
+
     runs {
         configureEach {
             workingDir = layout.projectDirectory.dir("run/${name}")

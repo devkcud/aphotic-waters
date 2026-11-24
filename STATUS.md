@@ -6,7 +6,9 @@ On seed `0`, deepslate on steep faces bordering open water fell from 46% to 9% a
 
 Continental shelves, steep drop-offs, abyssal plains and trenches in the default Overworld await human in-game review. The extra terrain shaping fades out between Y −48 and −56 to retain the underlying basin floor near lava level.
 
-The build and headless Forge test passed. Across three seeds, all 487 sampled trench centerline columns had continuous water to the floor. Fresh Forge chunks also reproduced the previously validated seed-0 crater floor at Y −24 and its western rim at Y 31.
+The cliff pass compiles its material rule once per chunk. Both javac and Eclipse pass with deprecations treated as errors. A headless Forge test of the packaged mod reproduced the seed-0 cliff and floor samples.
+
+Across three seeds, all 487 sampled trench centerline columns had continuous water to the floor. Fresh Forge chunks also reproduced the previously validated seed-0 crater floor at Y −24 and its western rim at Y 31.
 
 Use spectator mode in a fresh default world with seed `0` for the remaining visual checks.
 

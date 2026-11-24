@@ -1,7 +1,6 @@
 package io.github.devkcud.aphoticwaters.worldgen;
 
 import com.mojang.serialization.MapCodec;
-import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -12,7 +11,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,8 +18,11 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.WorldGenerationContext;
+import net.minecraft.world.level.levelgen.densityfunction.DensityVolume;
 import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.material.MaterialRuleContext;
+import net.minecraft.world.level.levelgen.material.MaterialSystem;
 import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
 public record CliffRockFeature(Holder<MaterialRule> material) implements Feature {
@@ -68,8 +69,11 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
         final var state = level.getLevel().getChunkSource().randomState();
         final var samplers = state.samplersWithContext(SamplerContext.EMPTY_UNCACHED);
-        final var context = new WorldGenerationContext(generator, chunk);
-        final Function<BlockPos, Holder<Biome>> biomes = level::getBiome;
+        final int minY = level.getMinY();
+        final var volume = new DensityVolume(SIZE, maxY - minY + 1, SIZE, startX, minY, startZ);
+        final var context = new MaterialRuleContext(state.surfaceSystem(), state, volume, samplers,
+                level::getBiome, new WorldGenerationContext(generator, chunk), null);
+        final var rule = material.value().compile(context);
         final var pos = new BlockPos.MutableBlockPos();
         boolean placed = false;
 
@@ -78,6 +82,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
                 final int index = index(x, z);
                 final int top = Math.min(maxY, floors[index] - 1);
                 final int bottom = lowestFloor(floors, index) + 1;
+                boolean first = true;
 
                 for (int y = bottom; y <= top; y++) {
                     pos.set(startX + x, y, startZ + z);
@@ -91,10 +96,16 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
                         continue;
                     }
 
-                    final var rock = state.surfaceSystem().topMaterial(material.value(), state, context, biomes,
-                            chunk, samplers, pos, true);
-                    if (rock.isPresent()) {
-                        placed |= level.setBlock(pos, rock.get(), Block.UPDATE_CLIENTS);
+                    if (first) {
+                        context.updateXZ(pos.getX(), pos.getZ(), MaterialSystem.getSurfaceGradientX(chunk, x, z),
+                                MaterialSystem.getSurfaceGradientZ(chunk, x, z));
+                        first = false;
+                    }
+
+                    context.updateY(1, 1, y + 1, y);
+                    final BlockState rock = rule.tryApply(pos.getX(), y, pos.getZ());
+                    if (rock != null) {
+                        placed |= level.setBlock(pos, rock, Block.UPDATE_CLIENTS);
                     }
                 }
             }
