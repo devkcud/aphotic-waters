@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:lerp",
+    "alpha": "aphoticwaters:basin_weight",
+    "first": "aphoticwaters:terrain_density",
+    "second": {
+      "type": "minecraft:min",
+      "left": "aphoticwaters:terrain_density",
+      "right": "aphoticwaters:shelf_ceiling"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:add",
+    "left": "aphoticwaters:beach_offset",
+    "right": {
+      "type": "minecraft:mul",
+      "left": "aphoticwaters:basin_weight",
+      "right": "aphoticwaters:seafloor_relief"
+    }
+  }
+}

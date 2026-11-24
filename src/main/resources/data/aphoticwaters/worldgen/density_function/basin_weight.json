@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:mul",
+    "left": {
+      "type": "minecraft:blend_alpha"
+    },
+    "right": {
+      "type": "minecraft:spline",
+      "spline": {
+        "coordinate": "minecraft:overworld/continents",
+        "points": [
+          { "location": -1.05, "value": 0.0, "derivative": 0.0 },
+          { "location": -0.97, "value": 1.0, "derivative": 0.0 },
+          { "location": -0.39, "value": 1.0, "derivative": 0.0 },
+          { "location": -0.35, "value": 0.08, "derivative": -0.5 },
+          { "location": -0.19, "value": 0.0, "derivative": 0.0 }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_ocean",
+  "features": "aphoticwaters:cliff_rock",
+  "step": "top_layer_modification"
+}

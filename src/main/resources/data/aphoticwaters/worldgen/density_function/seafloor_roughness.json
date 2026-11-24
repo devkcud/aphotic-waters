@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:min",
+    "left": {
+      "type": "minecraft:lerp",
+      "alpha": "aphoticwaters:beach_weight",
+      "first": 1.0,
+      "second": 0.3
+    },
+    "right": {
+      "type": "minecraft:lerp",
+      "alpha": "aphoticwaters:basin_weight",
+      "first": 1.0,
+      "second": {
+        "type": "minecraft:lerp",
+        "alpha": "aphoticwaters:shelf_weight",
+        "first": {
+          "type": "minecraft:spline",
+          "spline": {
+            "coordinate": "aphoticwaters:abyssal_profile",
+            "points": [
+              { "location": -1.18, "value": 0.16, "derivative": 0.0 },
+              { "location": -1.07, "value": 0.35, "derivative": 0.0 },
+              { "location": -0.85, "value": 1.0, "derivative": 0.0 }
+            ]
+          }
+        },
+        "second": {
+          "type": "minecraft:spline",
+          "spline": {
+            "coordinate": "aphoticwaters:ocean_regions",
+            "points": [
+              { "location": 0.09, "value": 0.34, "derivative": 0.0 },
+              { "location": 0.26, "value": 1.0, "derivative": 0.0 }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

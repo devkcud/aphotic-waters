@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:add",
+  "left": {
+    "type": "minecraft:gradient",
+    "axis": "y",
+    "from_coordinate": -64,
+    "from_value": 1.5,
+    "to_coordinate": 320,
+    "to_value": -1.5
+  },
+  "right": {
+    "type": "minecraft:lerp",
+    "alpha": "aphoticwaters:abyssal_blend",
+    "first": "aphoticwaters:basin_offset",
+    "second": "aphoticwaters:seafloor_offset"
+  }
+}

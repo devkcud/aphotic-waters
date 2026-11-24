@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8.7",
+  "package": "io.github.devkcud.aphoticwaters.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ChunkGeneratorMixin",
+    "NoiseBasedChunkGeneratorMixin",
+    "StructureMixin",
+    "StructureStartMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

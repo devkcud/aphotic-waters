@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:spline",
+    "spline": {
+      "coordinate": "aphoticwaters:ocean_regions",
+      "points": [
+        { "location": -0.13, "value": 0.0, "derivative": 0.0 },
+        { "location": 0.11, "value": 1.0, "derivative": 0.0 }
+      ]
+    }
+  }
+}

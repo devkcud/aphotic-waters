@@ -1,10 +1,12 @@
+ALL: 4/119 (3.36%)
+
 ## Ocean generation
 
-- [ ] Significantly deeper and larger oceans.
-- [ ] Continental shelves and steep oceanic drop-offs.
-- [ ] Abyssal plains and enormous trenches.
+- [x] Significantly deeper and larger oceans.
+- [x] Continental shelves and steep oceanic drop-offs.
+- [x] Abyssal plains and enormous trenches.
 - [ ] Extensive submerged cave networks.
-- [ ] Underwater mountains and geological formations.
+- [x] Underwater mountains and geological formations.
 - [ ] Hydrothermal vents.
 - [ ] Distinct oceanic depth zones.
 - [ ] Submerged caverns with naturally trapped air pockets.
