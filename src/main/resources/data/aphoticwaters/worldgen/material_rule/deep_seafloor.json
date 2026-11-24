@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:condition",
+  "if_true": {
+    "type": "minecraft:not",
+    "invert": {
+      "type": "minecraft:y_above",
+      "anchor": { "absolute": 0 },
+      "surface_depth_multiplier": 0,
+      "add_stone_depth": false
+    }
+  },
+  "then_run": {
+    "type": "minecraft:condition",
+    "if_true": {
+      "type": "minecraft:not",
+      "invert": {
+        "type": "minecraft:water",
+        "offset": -62,
+        "surface_depth_multiplier": 0,
+        "add_stone_depth": true
+      }
+    },
+    "then_run": {
+      "type": "minecraft:condition",
+      "if_true": "minecraft:very_deep_under_floor",
+      "then_run": {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": "#minecraft:is_ocean"
+        },
+        "then_run": "aphoticwaters:seafloor_rock"
+      }
+    }
+  }
+}
