@@ -8,4 +8,6 @@ The build passes with deprecation warnings treated as errors. Five standard ship
 
 The frozen cliff floor scan now passes through above-water air in ice cover. An archived terrain sample contained 56 affected columns. The offline assembly passed. Inspect a submerged cliff below an iceberg with an above-water air pocket in a disposable world.
 
-Next, check saved structure bounds against the template used on reload and review the terrain generation lifecycle.
+Structure reload now checks the saved elevation against the piece and enforces the generation size limit. All 18 marked starts in two archived saves matched the new checks. The four beached controls had no marker. Offline assembly and the four-target Forge mixin audit passed.
+
+In a disposable world, reload a fitted monument and submerged wreck, then check fresh neighboring chunks after replacing a wreck template with one wider than 96 blocks. The wreck should keep its saved origin and the mod should skip seabed shaping for the oversized replacement.

@@ -46,7 +46,7 @@ public final class SeafloorPlacement {
         final BoundingBox box = piece.getBoundingBox();
         final int minY = context.heightAccessor().getMinY() + 5;
         final int maxY = Math.min(context.heightAccessor().getMaxY() + 1, generator.getSeaLevel() - 1) - box.getYSpan();
-        if (box.getXSpan() > MAX_SPAN || box.getZSpan() > MAX_SPAN || box.getYSpan() > MAX_SPAN || minY > maxY) {
+        if (!fitsBounds(box) || minY > maxY) {
             return;
         }
 
@@ -66,7 +66,7 @@ public final class SeafloorPlacement {
             }
 
             final int keel = keelHeight(ship);
-            if (keel < 0) {
+            if (keel < 0 || keel >= box.getYSpan()) {
                 return;
             }
 
@@ -92,6 +92,12 @@ public final class SeafloorPlacement {
                 && piece == ShipwreckPiece.class;
     }
 
+    public static boolean canRestoreShip(final ShipwreckPiece ship, final int baseY) {
+        final BoundingBox box = ship.getBoundingBox();
+        return ship.heightAdjusted && !ship.template().palettes.isEmpty() && fitsBounds(box)
+                && baseY >= box.minY() && baseY <= box.maxY();
+    }
+
     public static void moveMonument(final MonumentBuilding building, final int baseY) {
         final int offset = baseY - building.getBoundingBox().minY();
         if (offset == 0) {
@@ -102,6 +108,14 @@ public final class SeafloorPlacement {
         for (final StructurePiece room : building.childPieces) {
             room.move(0, offset, 0);
         }
+    }
+
+    private static boolean fitsBounds(final BoundingBox box) {
+        return fitsSpan(box.getXSpan()) && fitsSpan(box.getYSpan()) && fitsSpan(box.getZSpan());
+    }
+
+    private static boolean fitsSpan(final int span) {
+        return span > 0 && span <= MAX_SPAN;
     }
 
     private static int keelHeight(final ShipwreckPiece ship) {

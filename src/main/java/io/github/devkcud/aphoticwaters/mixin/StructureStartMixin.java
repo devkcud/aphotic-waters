@@ -10,11 +10,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import io.github.devkcud.aphoticwaters.worldgen.SeafloorPlacement;
 import io.github.devkcud.aphoticwaters.worldgen.SeafloorStart;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.structures.OceanMonumentPieces.MonumentBuilding;
+import net.minecraft.world.level.levelgen.structure.structures.ShipwreckPieces.ShipwreckPiece;
 
 @Mixin(StructureStart.class)
 public abstract class StructureStartMixin implements SeafloorStart {
@@ -48,14 +51,23 @@ public abstract class StructureStartMixin implements SeafloorStart {
     @Inject(method = "loadStaticStart", at = @At("RETURN"))
     private static void aphoticwaters$load(final StructurePieceSerializationContext context, final CompoundTag tag,
             final long seed, final CallbackInfoReturnable<StructureStart> result) {
-        final int baseY = tag.getIntOr(aphoticwaters$baseKey, UNSET);
         final StructureStart start = result.getReturnValue();
-        if (baseY == UNSET || start == null || !SeafloorPlacement.supports(start)) {
+        if (!(tag.get(aphoticwaters$baseKey) instanceof IntTag(int baseY))
+                || baseY < DimensionType.MIN_Y || baseY > DimensionType.MAX_Y
+                || start == null || !SeafloorPlacement.supports(start)) {
             return;
         }
 
-        if (start.getPieces().getFirst() instanceof MonumentBuilding building) {
+        final var piece = start.getPieces().getFirst();
+        if (piece instanceof MonumentBuilding building) {
+            final var child = tag.getListOrEmpty("Children").getCompoundOrEmpty(0);
+            if (child.read("BB", BoundingBox.CODEC).filter(saved -> saved.minY() == baseY).isEmpty()) {
+                return;
+            }
+
             SeafloorPlacement.moveMonument(building, baseY);
+        } else if (piece instanceof ShipwreckPiece ship && !SeafloorPlacement.canRestoreShip(ship, baseY)) {
+            return;
         }
 
         SeafloorStart.of(start).aphoticwaters$setBaseY(baseY);
