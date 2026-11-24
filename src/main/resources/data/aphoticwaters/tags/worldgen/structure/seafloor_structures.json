@@ -1,6 +1,3 @@
 {
-  "values": [
-    "minecraft:monument",
-    "minecraft:shipwreck"
-  ]
+  "values": ["minecraft:monument", "minecraft:shipwreck"]
 }

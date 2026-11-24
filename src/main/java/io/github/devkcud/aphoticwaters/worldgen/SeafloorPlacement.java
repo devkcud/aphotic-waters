@@ -35,7 +35,8 @@ public final class SeafloorPlacement {
 
     public static void fit(final StructureStart start, final Holder<Structure> selected,
             final ResourceKey<Level> dimension, final Structure.GenerationContext context) {
-        if (!dimension.equals(Level.OVERWORLD) || !(context.chunkGenerator() instanceof NoiseBasedChunkGenerator generator)
+        if (!dimension.equals(Level.OVERWORLD)
+                || !(context.chunkGenerator() instanceof NoiseBasedChunkGenerator generator)
                 || !selected.is(STRUCTURES) || selected.value().terrainAdaptation() != TerrainAdjustment.NONE
                 || !supports(start)) {
             return;

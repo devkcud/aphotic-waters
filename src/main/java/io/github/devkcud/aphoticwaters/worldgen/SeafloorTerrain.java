@@ -51,7 +51,8 @@ public final class SeafloorTerrain {
         }
     }
 
-    private static void blendColumn(final List<Bed> beds, final ChunkAccess chunk, final NoiseGeneratorSettings settings,
+    private static void blendColumn(final List<Bed> beds, final ChunkAccess chunk,
+            final NoiseGeneratorSettings settings,
             final BlockPos.MutableBlockPos pos) {
         final int floor = pos.getY();
         int inside = Integer.MAX_VALUE;

@@ -14,10 +14,10 @@ import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 
 @Mixin(NoiseBasedChunkGenerator.class)
 public abstract class NoiseBasedChunkGeneratorMixin {
-    @Inject(method = "lambda$buildTerrain$0", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/level/levelgen/NoiseBasedChunkGenerator;buildSurface"))
+    @Inject(method = "lambda$buildTerrain$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/NoiseBasedChunkGenerator;buildSurface"))
     private void aphoticwaters$shapeSeafloor(final CallbackInfoReturnable<ChunkAccess> result,
-            @Local(argsOnly = true) final ChunkAccess chunk, @Local(argsOnly = true) final StructureManager structures) {
+            @Local(argsOnly = true) final ChunkAccess chunk,
+            @Local(argsOnly = true) final StructureManager structures) {
         final var generator = (NoiseBasedChunkGenerator) (Object) this;
         SeafloorTerrain.blend(chunk, structures, generator.generatorSettings().value());
     }

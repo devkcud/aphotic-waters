@@ -14,8 +14,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 @Mixin(ChunkGenerator.class)
 public abstract class ChunkGeneratorMixin {
-    @ModifyExpressionValue(method = "createReferences", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/level/levelgen/structure/StructureStart;getBoundingBox"))
+    @ModifyExpressionValue(method = "createReferences", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/structure/StructureStart;getBoundingBox"))
     private BoundingBox aphoticwaters$includeSlope(final BoundingBox box, @Local final StructureStart start) {
         return SeafloorStart.of(start).aphoticwaters$baseY() == SeafloorStart.UNSET ? box
                 : box.inflatedBy(SeafloorTerrain.MARGIN, 0, SeafloorTerrain.MARGIN);

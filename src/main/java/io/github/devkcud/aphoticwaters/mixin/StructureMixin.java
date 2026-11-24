@@ -20,7 +20,8 @@ public abstract class StructureMixin {
     @Inject(method = "generate", at = @At("RETURN"))
     private void aphoticwaters$fit(final CallbackInfoReturnable<StructureStart> result,
             @Local(argsOnly = true) final Holder<Structure> selected,
-            @Local(argsOnly = true) final ResourceKey<Level> dimension, @Local final Structure.GenerationContext context) {
+            @Local(argsOnly = true) final ResourceKey<Level> dimension,
+            @Local final Structure.GenerationContext context) {
         if (context.heightAccessor() instanceof ChunkAccess chunk && !chunk.isUpgrading()) {
             SeafloorPlacement.fit(result.getReturnValue(), selected, dimension, context);
         }
