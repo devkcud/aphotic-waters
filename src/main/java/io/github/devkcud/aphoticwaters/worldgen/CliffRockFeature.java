@@ -47,11 +47,16 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
             return false;
         }
 
+        final int minY = level.getMinY();
+        final int seaLevel = generator.getSeaLevel();
+        if (seaLevel <= minY) {
+            return false;
+        }
+
+        final int seaY = Math.min(level.getMaxY(), seaLevel - 1);
         final var chunk = level.getChunk(origin);
         final int startX = chunk.getPos().getMinBlockX();
         final int startZ = chunk.getPos().getMinBlockZ();
-        final int seaY = generator.getSeaLevel() - 1;
-        final int maxY = Math.min(level.getMaxY(), seaY);
         final var probe = new BlockPos.MutableBlockPos();
         final int[] floors = new int[WIDTH * WIDTH];
         boolean hasSubmergedFloor = false;
@@ -60,7 +65,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
             for (int x = -REACH; x < SIZE + REACH; x++) {
                 final int floor = floorHeight(level, probe, startX + x, startZ + z);
                 floors[index(x, z)] = floor;
-                hasSubmergedFloor |= floor < maxY;
+                hasSubmergedFloor |= floor < seaY;
             }
         }
 
@@ -70,8 +75,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
         final var state = level.getLevel().getChunkSource().randomState();
         final var samplers = state.samplersWithContext(SamplerContext.EMPTY_UNCACHED);
-        final int minY = level.getMinY();
-        final var volume = new DensityVolume(SIZE, maxY - minY + 1, SIZE, startX, minY, startZ);
+        final var volume = new DensityVolume(SIZE, seaY - minY + 1, SIZE, startX, minY, startZ);
         final var context = new MaterialRuleContext(state.surfaceSystem(), state, volume, samplers,
                 level::getBiome, new WorldGenerationContext(generator, chunk), null);
         final var rule = material.value().compile(context);
@@ -81,7 +85,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
         for (int z = 0; z < SIZE; z++) {
             for (int x = 0; x < SIZE; x++) {
                 final int index = index(x, z);
-                final int top = Math.min(maxY, floors[index] - 1);
+                final int top = Math.min(seaY, floors[index] - 1);
                 final int bottom = lowestFloor(floors, index) + 1;
                 boolean first = true;
 
@@ -122,15 +126,16 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
     private static int floorHeight(final WorldGenLevel level, final BlockPos.MutableBlockPos probe,
             final int x, final int z) {
+        final int minY = level.getMinY();
         int y = level.getHeight(Heightmap.Types.OCEAN_FLOOR, x, z) - 1;
-        if (y < 0) {
+        if (y < minY || !isIceCover(level.getBlockState(probe.set(x, y, z)))) {
             return y;
         }
 
-        BlockState state = level.getBlockState(probe.set(x, y, z));
-        if (isIceCover(state)) {
-            while (y > level.getMinY() && (isIceCover(state) || state.getFluidState().is(FluidTags.WATER))) {
-                state = level.getBlockState(probe.setY(--y));
+        while (--y >= minY) {
+            final BlockState state = level.getBlockState(probe.setY(y));
+            if (!isIceCover(state) && !isOpenWater(state)) {
+                break;
             }
         }
 
@@ -139,6 +144,10 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
     private static boolean isIceCover(final BlockState state) {
         return state.is(BlockTags.ICE) || state.is(BlockTags.SNOW);
+    }
+
+    private static boolean isOpenWater(final BlockState state) {
+        return state.getFluidState().is(FluidTags.WATER) && !state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP);
     }
 
     private static int lowestFloor(final int[] floors, final int index) {
@@ -156,25 +165,28 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
     private static boolean facesOcean(final WorldGenLevel level, final BlockPos pos,
             final BlockPos.MutableBlockPos probe,
             final int[] floors, final int index, final int seaY) {
+        final int y = pos.getY();
+
         for (final Direction side : SIDES) {
             final int step = side.getStepX() + side.getStepZ() * WIDTH;
             probe.set(pos);
 
             for (int distance = 1; distance <= REACH; distance++) {
                 probe.move(side);
-                if (!level.getFluidState(probe).is(FluidTags.WATER)) {
+                if (!isOpenWater(level.getBlockState(probe))) {
                     break;
                 }
 
-                if (pos.getY() > floors[index + step * distance]) {
-                    final BlockState sea = level.getBlockState(probe.setY(seaY));
-                    if ((sea.getFluidState().is(FluidTags.WATER) || isIceCover(sea))
-                            && level.getBiome(probe).is(BiomeTags.IS_OCEAN)) {
-                        return true;
-                    }
-
-                    break;
+                if (y <= floors[index + step * distance]) {
+                    continue;
                 }
+
+                final BlockState sea = level.getBlockState(probe.setY(seaY));
+                if ((isOpenWater(sea) || isIceCover(sea)) && level.getBiome(probe).is(BiomeTags.IS_OCEAN)) {
+                    return true;
+                }
+
+                probe.setY(y);
             }
         }
 

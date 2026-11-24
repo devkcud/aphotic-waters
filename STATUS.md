@@ -1,5 +1,7 @@
 # Ocean terrain
 
+The cliff scan now follows connected water across biome boundaries and resolves frozen floors at any build height. All nine targeted cases and the strict Java build pass. Next, trim the floor scan and verify the packaged mod in a disposable Forge world.
+
 The deep ocean floor passed in-game review. Submerged cliff walls now use the same rock palette on stone and deepslate up to the water surface. The pass requires sideways exposure to ocean water and a solid block above. The transition across Y 0 awaits in-game review in fresh chunks.
 
 In the two seed-0 views below, generated andesite now spans Y −7 to 6 and diorite spans Y −2 to 5. All 15,136 sampled submerged seafloor heights around the views matched the previous build. Some overlapping vanilla deposits varied with chunk order in both builds.
