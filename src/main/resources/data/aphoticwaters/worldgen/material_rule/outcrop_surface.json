@@ -1,0 +1,63 @@
+{
+  "type": "minecraft:condition",
+  "if_true": "minecraft:on_floor",
+  "then_run": {
+    "type": "minecraft:condition",
+    "if_true": {
+      "type": "minecraft:y_above",
+      "anchor": { "absolute": 62 },
+      "surface_depth_multiplier": 0,
+      "add_stone_depth": false
+    },
+    "then_run": {
+      "type": "minecraft:condition",
+      "if_true": {
+        "type": "minecraft:not",
+        "invert": {
+          "type": "minecraft:y_above",
+          "anchor": { "absolute": 67 },
+          "surface_depth_multiplier": 0,
+          "add_stone_depth": false
+        }
+      },
+      "then_run": {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": "#minecraft:is_ocean"
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:noise_threshold",
+            "noise": "aphoticwaters:outcrops",
+            "min_threshold": 0.8,
+            "max_threshold": 2.0
+          },
+          "then_run": {
+            "type": "minecraft:sequence",
+            "sequence": [
+              {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:y_above",
+                  "anchor": { "absolute": 64 },
+                  "surface_depth_multiplier": 0,
+                  "add_stone_depth": false
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": "minecraft:stone"
+                }
+              },
+              {
+                "type": "minecraft:block",
+                "result_state": "minecraft:coarse_dirt"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
