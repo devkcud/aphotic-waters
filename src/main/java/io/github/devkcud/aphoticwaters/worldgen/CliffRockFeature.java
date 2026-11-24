@@ -1,6 +1,7 @@
 package io.github.devkcud.aphoticwaters.worldgen;
 
 import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -32,7 +33,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
     private static final int REACH = 8;
     private static final int SIZE = SectionPos.SECTION_SIZE;
     private static final int WIDTH = SIZE + 2 * REACH;
-    private static final Direction[] SIDES = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+    private static final Direction[] SIDES = { Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST };
 
     @Override
     public MapCodec<CliffRockFeature> codec() {
@@ -151,7 +152,8 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
         return lowest;
     }
 
-    private static boolean facesOcean(final WorldGenLevel level, final BlockPos pos, final BlockPos.MutableBlockPos probe,
+    private static boolean facesOcean(final WorldGenLevel level, final BlockPos pos,
+            final BlockPos.MutableBlockPos probe,
             final int[] floors, final int index, final int seaY) {
         for (final Direction side : SIDES) {
             final int step = side.getStepX() + side.getStepZ() * WIDTH;
