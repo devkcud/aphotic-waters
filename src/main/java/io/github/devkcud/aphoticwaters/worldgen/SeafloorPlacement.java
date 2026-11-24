@@ -70,7 +70,7 @@ public final class SeafloorPlacement {
             }
 
             final int originY = Mth.clamp(floorHeight(box, context) - keel, minY, maxY);
-            box.move(0, originY - box.minY(), 0);
+            ship.boundingBox = box.moved(0, originY - box.minY(), 0);
             ship.adjustPositionHeight(originY);
             SeafloorStart.of(start).aphoticwaters$setBaseY(originY + keel);
         }
