@@ -1,4 +1,12 @@
-# Ocean terrain
+# Ocean structure placement
+
+New monuments and submerged wrecks use the median seafloor height across their generated footprints. Placement preserves the monument's rooms and the wreck's rotation. Data packs select eligible structures through `#aphoticwaters:seafloor_structures`.
+
+The packaged Forge placement check passed in a fresh seed-0 world. A deep monument moved from Y 39 to Y −15. Four monuments and five wrecks round-tripped their bounds, including regenerated monument rooms. Both beached controls matched their previous placements.
+
+Next, blend the seafloor into the foundations to close the remaining gaps on steep slopes, then check the screenshot sites, a padded replacement wreck template, and the data-pack opt-out.
+
+## Ocean terrain awaiting visual review
 
 The offshore shelf ceiling keeps broad ridges underwater. Rare, fine-scale peaks let low outcrops emerge with coarse dirt and stone surfaces. Calm shelves, abyssal plains, and trenches still vary the ocean depth.
 

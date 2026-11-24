@@ -18,6 +18,7 @@ minecraft {
     runs {
         configureEach {
             workingDir = layout.projectDirectory.dir("run/${name}")
+            args "--mixin.config=${modId}.mixins.json"
             systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
             systemProperty 'forge.enabledGameTestNamespaces', modId
         }
@@ -54,4 +55,8 @@ tasks.named('processResources') {
     filesMatching('META-INF/mods.toml') {
         expand(metadata)
     }
+}
+
+tasks.named('jar', Jar) {
+    manifest.attributes('MixinConfigs': "${modId}.mixins.json")
 }
