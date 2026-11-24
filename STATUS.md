@@ -4,10 +4,14 @@ In-game review is complete. Ocean monument and shipwreck placement are approved,
 
 The build passes with deprecation warnings treated as errors. Five standard shipwrecks and five oversized replacements matched their approved placement bounds and passed Forge save and reload checks.
 
-## Code review
+## Review changes awaiting in-game validation
 
-The frozen cliff floor scan now passes through above-water air in ice cover. An archived terrain sample contained 56 affected columns. The offline assembly passed. Inspect a submerged cliff below an iceberg with an above-water air pocket in a disposable world.
+The frozen cliff scan now passes through above-water air in ice cover. An archived terrain sample contained 56 affected columns. Inspect the submerged cliff below a hollow iceberg in a disposable world.
 
-Structure reload now checks the saved elevation against the piece and enforces the generation size limit. All 18 marked starts in two archived saves matched the new checks. The four beached controls had no marker. Offline assembly and the four-target Forge mixin audit passed.
+Structure reload now checks the saved elevation against the piece and enforces the generation size limit. All 18 marked starts in two archived saves matched the new checks. The four beached controls had no marker.
 
 In a disposable world, reload a fitted monument and submerged wreck, then check fresh neighboring chunks after replacing a wreck template with one wider than 96 blocks. The wreck should keep its saved origin and the mod should skip seabed shaping for the oversized replacement.
+
+Placement also checks the configured sea level before subtracting structure height. With a sea level of `-2147483648`, a disposable custom Overworld should skip seafloor fitting.
+
+Offline assembly passed with deprecations treated as errors. All four mixins applied in the Forge audit. Full javac lint reported unclaimed runtime annotations, and Mixin reported Java 25 bytecode above its declared Java 21 compatibility level.

@@ -45,8 +45,13 @@ public final class SeafloorPlacement {
         final var piece = start.getPieces().getFirst();
         final BoundingBox box = piece.getBoundingBox();
         final int minY = context.heightAccessor().getMinY() + 5;
-        final int maxY = Math.min(context.heightAccessor().getMaxY() + 1, generator.getSeaLevel() - 1) - box.getYSpan();
-        if (!fitsBounds(box) || minY > maxY) {
+        final int seaLevel = generator.getSeaLevel();
+        if (!fitsBounds(box) || seaLevel <= minY) {
+            return;
+        }
+
+        final int maxY = Math.min(context.heightAccessor().getMaxY() + 1, seaLevel - 1) - box.getYSpan();
+        if (minY > maxY) {
             return;
         }
 
