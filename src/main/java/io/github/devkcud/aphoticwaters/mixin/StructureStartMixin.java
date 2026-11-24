@@ -1,6 +1,7 @@
 package io.github.devkcud.aphoticwaters.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -10,12 +11,16 @@ import io.github.devkcud.aphoticwaters.worldgen.SeafloorPlacement;
 import io.github.devkcud.aphoticwaters.worldgen.SeafloorStart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.structures.OceanMonumentPieces.MonumentBuilding;
 
 @Mixin(StructureStart.class)
 public abstract class StructureStartMixin implements SeafloorStart {
+    @Shadow
+    private volatile BoundingBox cachedBoundingBox;
+
     @Unique
     private static final String aphoticwaters$baseKey = "aphoticwaters:seafloor_base";
     @Unique
@@ -29,6 +34,7 @@ public abstract class StructureStartMixin implements SeafloorStart {
     @Override
     public void aphoticwaters$setBaseY(final int baseY) {
         aphoticwaters$baseY = baseY;
+        cachedBoundingBox = null;
     }
 
     @Inject(method = "createTag", at = @At("RETURN"))
@@ -44,13 +50,14 @@ public abstract class StructureStartMixin implements SeafloorStart {
             final long seed, final CallbackInfoReturnable<StructureStart> result) {
         final int baseY = tag.getIntOr(aphoticwaters$baseKey, UNSET);
         final StructureStart start = result.getReturnValue();
-        if (baseY == UNSET || start == null || !start.isValid()) {
+        if (baseY == UNSET || start == null || !SeafloorPlacement.supports(start)) {
             return;
         }
 
-        SeafloorStart.of(start).aphoticwaters$setBaseY(baseY);
         if (start.getPieces().getFirst() instanceof MonumentBuilding building) {
             SeafloorPlacement.moveMonument(building, baseY);
         }
+
+        SeafloorStart.of(start).aphoticwaters$setBaseY(baseY);
     }
 }

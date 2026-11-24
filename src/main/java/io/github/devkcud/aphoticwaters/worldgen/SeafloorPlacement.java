@@ -10,12 +10,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
-import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
@@ -31,38 +28,39 @@ public final class SeafloorPlacement {
             Identifier.fromNamespaceAndPath(AphoticWaters.MOD_ID, "seafloor_structures"));
     private static final int SAMPLES = 5;
     private static final int MAX_SPAN = 96;
+    private static final int VANILLA_MONUMENT_BASE = 39;
 
     private SeafloorPlacement() {
     }
 
     public static void fit(final StructureStart start, final Holder<Structure> selected,
-            final ResourceKey<Level> dimension, final ChunkGenerator generator, final LevelHeightAccessor height,
-            final RandomState random) {
-        if (!start.isValid() || !dimension.equals(Level.OVERWORLD) || !(generator instanceof NoiseBasedChunkGenerator)
+            final ResourceKey<Level> dimension, final Structure.GenerationContext context) {
+        if (!dimension.equals(Level.OVERWORLD) || !(context.chunkGenerator() instanceof NoiseBasedChunkGenerator generator)
                 || !selected.is(STRUCTURES) || selected.value().terrainAdaptation() != TerrainAdjustment.NONE
-                || start.getPieces().size() != 1) {
+                || !supports(start)) {
             return;
         }
 
-        final var structure = selected.value();
         final var piece = start.getPieces().getFirst();
-        final boolean monument = structure.getClass() == OceanMonumentStructure.class
-                && piece.getClass() == MonumentBuilding.class;
         final BoundingBox box = piece.getBoundingBox();
-        final int minY = height.getMinY() + 5;
-        final int maxY = Math.min(height.getMaxY() + 1, generator.getSeaLevel() - 1) - box.getYSpan();
+        final int minY = context.heightAccessor().getMinY() + 5;
+        final int maxY = Math.min(context.heightAccessor().getMaxY() + 1, generator.getSeaLevel() - 1) - box.getYSpan();
         if (box.getXSpan() > MAX_SPAN || box.getZSpan() > MAX_SPAN || box.getYSpan() > MAX_SPAN || minY > maxY) {
             return;
         }
 
-        if (monument) {
-            final int baseY = Mth.clamp(floorHeight(box, generator, height, random), minY, maxY);
-            moveMonument((MonumentBuilding) piece, baseY);
+        if (piece instanceof MonumentBuilding building) {
+            if (box.minY() != VANILLA_MONUMENT_BASE) {
+                return;
+            }
+
+            final int baseY = Mth.clamp(floorHeight(box, context), minY, maxY);
+            moveMonument(building, baseY);
             SeafloorStart.of(start).aphoticwaters$setBaseY(baseY);
-        } else if (structure.getClass() == ShipwreckStructure.class && !((ShipwreckStructure) structure).isBeached
-                && piece.getClass() == ShipwreckPiece.class) {
-            final var ship = (ShipwreckPiece) piece;
-            if (ship.heightAdjusted && !ship.isTooBigToFitInWorldGenRegion()) {
+        } else if (piece instanceof ShipwreckPiece ship) {
+            if (ship.heightAdjusted && (!ship.isTooBigToFitInWorldGenRegion()
+                    || ship.templatePosition().getY() != Structure.getMeanFirstOccupiedHeight(context,
+                            box.minX(), box.getXSpan(), box.minZ(), box.getZSpan()))) {
                 return;
             }
 
@@ -71,11 +69,26 @@ public final class SeafloorPlacement {
                 return;
             }
 
-            final int originY = Mth.clamp(floorHeight(box, generator, height, random) - keel, minY, maxY);
+            final int originY = Mth.clamp(floorHeight(box, context) - keel, minY, maxY);
             box.move(0, originY - box.minY(), 0);
             ship.adjustPositionHeight(originY);
             SeafloorStart.of(start).aphoticwaters$setBaseY(originY + keel);
         }
+    }
+
+    public static boolean supports(final StructureStart start) {
+        if (start.getPieces().size() != 1) {
+            return false;
+        }
+
+        final var structure = start.getStructure();
+        final var piece = start.getPieces().getFirst().getClass();
+        if (structure.getClass() == OceanMonumentStructure.class) {
+            return piece == MonumentBuilding.class;
+        }
+
+        return structure.getClass() == ShipwreckStructure.class && !((ShipwreckStructure) structure).isBeached
+                && piece == ShipwreckPiece.class;
     }
 
     public static void moveMonument(final MonumentBuilding building, final int baseY) {
@@ -114,15 +127,14 @@ public final class SeafloorPlacement {
         return keel;
     }
 
-    private static int floorHeight(final BoundingBox box, final ChunkGenerator generator,
-            final LevelHeightAccessor height, final RandomState random) {
+    private static int floorHeight(final BoundingBox box, final Structure.GenerationContext context) {
         final int[] floors = new int[SAMPLES * SAMPLES];
         for (int z = 0; z < SAMPLES; z++) {
             final int blockZ = box.minZ() + z * (box.getZSpan() - 1) / (SAMPLES - 1);
             for (int x = 0; x < SAMPLES; x++) {
                 final int blockX = box.minX() + x * (box.getXSpan() - 1) / (SAMPLES - 1);
-                floors[z * SAMPLES + x] = generator.getBaseHeight(blockX, blockZ, Heightmap.Types.OCEAN_FLOOR_WG,
-                        height, random);
+                floors[z * SAMPLES + x] = context.chunkGenerator().getBaseHeight(blockX, blockZ,
+                        Heightmap.Types.OCEAN_FLOOR_WG, context.heightAccessor(), context.randomState());
             }
         }
 

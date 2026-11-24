@@ -4,15 +4,15 @@ New monuments and submerged wrecks use the median seafloor height across their g
 
 The build and headless Forge checks passed. In fresh seed-0 worlds, the longest support across four monuments fell from 84 blocks to 4. All 58 tested keel blocks touched solid ground across five wrecks, including with wider replacement templates padded underneath. The two beached controls and 46,798 sampled columns outside the blending areas matched the baseline.
 
-Save checks covered regenerated monument rooms and existing vanilla starts. An empty replacement tag reproduced all 130,474 sampled terrain heights. Replacement structure types and explicit terrain adaptation retained their own generation.
+Save checks covered regenerated monument rooms and existing vanilla starts. An empty replacement tag reproduced all 130,474 sampled terrain heights. A test mod retained its chosen monument and wreck elevations, including for oversized templates. Replacement structure types and explicit terrain adaptation also kept their own placement.
 
 Human visual review is pending. These sites are in a fresh default world with seed `0` and can be inspected in spectator mode.
 
 | Site | Teleport | What to inspect |
 | --- | --- | --- |
-| Screenshot monument | `/tp @s 1404 79 -220` | Check the shelf behind the roof and the slope along the walls. |
-| Deep monument | `/tp @s -656 13 -252` | The foundation is at Y −15. Circle the perimeter and look underneath. |
-| Rotated wreck | `/tp @s 1455 14 -270` | The hull rests at Y −2 across the slope. |
+| Screenshot monument | `/tp @s 1404.520 79.233 -219.890 53.7 48.2` | The shelf reached Y 61 under the roof. The fitted seafloor spans Y 37–39. |
+| Deep monument | `/tp @s -656 13 -252 0 25` | The foundation is at Y −15. Circle the perimeter and look underneath. |
+| Rotated wreck | `/tp @s 1455 14 -270 0 45` | The hull rests at Y −2 across the slope. |
 
 ## Ocean terrain awaiting visual review
 
