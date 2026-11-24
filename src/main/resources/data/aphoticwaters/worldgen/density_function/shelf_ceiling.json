@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:add",
+  "left": {
+    "type": "minecraft:gradient",
+    "axis": "y",
+    "from_coordinate": -64,
+    "from_value": 18.75,
+    "to_coordinate": 320,
+    "to_value": -38.85
+  },
+  "right": {
+    "type": "minecraft:cache",
+    "input": {
+      "type": "minecraft:spline",
+      "spline": {
+        "coordinate": {
+          "type": "minecraft:noise",
+          "noise": "aphoticwaters:outcrops",
+          "xz_scale": 1.0,
+          "y_scale": 0.0
+        },
+        "points": [
+          { "location": 0.84, "value": 0.0, "derivative": 0.0 },
+          { "location": 1.11, "value": 0.75, "derivative": 0.0 }
+        ]
+      }
+    }
+  }
+}
