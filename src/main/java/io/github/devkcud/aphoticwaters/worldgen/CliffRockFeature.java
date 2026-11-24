@@ -51,20 +51,20 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
         final int startX = chunk.getPos().getMinBlockX();
         final int startZ = chunk.getPos().getMinBlockZ();
         final int seaY = generator.getSeaLevel() - 1;
-        final int maxY = Math.min(-1, seaY);
+        final int maxY = Math.min(level.getMaxY(), seaY);
         final var probe = new BlockPos.MutableBlockPos();
         final int[] floors = new int[WIDTH * WIDTH];
-        boolean hasDeepFloor = false;
+        boolean hasSubmergedFloor = false;
 
         for (int z = -REACH; z < SIZE + REACH; z++) {
             for (int x = -REACH; x < SIZE + REACH; x++) {
                 final int floor = floorHeight(level, probe, startX + x, startZ + z);
                 floors[index(x, z)] = floor;
-                hasDeepFloor |= floor < maxY;
+                hasSubmergedFloor |= floor < maxY;
             }
         }
 
-        if (!hasDeepFloor) {
+        if (!hasSubmergedFloor) {
             return false;
         }
 
@@ -87,7 +87,8 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
                 for (int y = bottom; y <= top; y++) {
                     pos.set(startX + x, y, startZ + z);
-                    if (!chunk.getBlockState(pos).is(Blocks.DEEPSLATE)) {
+                    final BlockState host = chunk.getBlockState(pos);
+                    if (!host.is(Blocks.DEEPSLATE) && !host.is(Blocks.STONE)) {
                         continue;
                     }
 
@@ -105,7 +106,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
                     context.updateY(1, 1, y + 1, y);
                     final BlockState rock = rule.tryApply(pos.getX(), y, pos.getZ());
-                    if (rock != null) {
+                    if (rock != null && rock != host) {
                         placed |= level.setBlock(pos, rock, Block.UPDATE_CLIENTS);
                     }
                 }
