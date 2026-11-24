@@ -23,7 +23,6 @@ import net.minecraft.world.level.levelgen.densityfunction.DensityVolume;
 import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.material.MaterialRuleContext;
-import net.minecraft.world.level.levelgen.material.MaterialSystem;
 import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
 public record CliffRockFeature(Holder<MaterialRule> material) implements Feature {
@@ -49,6 +48,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
         final int minY = level.getMinY();
         final int seaLevel = generator.getSeaLevel();
+
         if (seaLevel <= minY) {
             return false;
         }
@@ -62,7 +62,9 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
         boolean hasSubmergedFloor = false;
 
         for (int z = -REACH; z < SIZE + REACH; z++) {
-            for (int x = -REACH; x < SIZE + REACH; x++) {
+            final int margin = z < 0 || z >= SIZE ? 0 : REACH;
+
+            for (int x = -margin; x < SIZE + margin; x++) {
                 final int floor = floorHeight(level, probe, startX + x, startZ + z);
                 floors[index(x, z)] = floor;
                 hasSubmergedFloor |= floor < seaY;
@@ -103,8 +105,13 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
                     }
 
                     if (first) {
-                        context.updateXZ(pos.getX(), pos.getZ(), MaterialSystem.getSurfaceGradientX(chunk, x, z),
-                                MaterialSystem.getSurfaceGradientZ(chunk, x, z));
+                        final var surface = Heightmap.Types.WORLD_SURFACE;
+                        final int slopeX = chunk.getHeight(surface, Math.min(x + 1, SIZE - 1), z)
+                                - chunk.getHeight(surface, Math.max(x - 1, 0), z);
+                        final int slopeZ = chunk.getHeight(surface, x, Math.min(z + 1, SIZE - 1))
+                                - chunk.getHeight(surface, x, Math.max(z - 1, 0));
+
+                        context.updateXZ(pos.getX(), pos.getZ(), slopeX, slopeZ);
                         first = false;
                     }
 
@@ -128,12 +135,14 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
             final int x, final int z) {
         final int minY = level.getMinY();
         int y = level.getHeight(Heightmap.Types.OCEAN_FLOOR, x, z) - 1;
+
         if (y < minY || !isIceCover(level.getBlockState(probe.set(x, y, z)))) {
             return y;
         }
 
         while (--y >= minY) {
             final BlockState state = level.getBlockState(probe.setY(y));
+
             if (!isIceCover(state) && !isOpenWater(state)) {
                 break;
             }
@@ -162,8 +171,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
         return lowest;
     }
 
-    private static boolean facesOcean(final WorldGenLevel level, final BlockPos pos,
-            final BlockPos.MutableBlockPos probe,
+    private static boolean facesOcean(final WorldGenLevel level, final BlockPos pos, final BlockPos.MutableBlockPos probe,
             final int[] floors, final int index, final int seaY) {
         final int y = pos.getY();
 
@@ -173,6 +181,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
 
             for (int distance = 1; distance <= REACH; distance++) {
                 probe.move(side);
+
                 if (!isOpenWater(level.getBlockState(probe))) {
                     break;
                 }
@@ -182,6 +191,7 @@ public record CliffRockFeature(Holder<MaterialRule> material) implements Feature
                 }
 
                 final BlockState sea = level.getBlockState(probe.setY(seaY));
+
                 if ((isOpenWater(sea) || isIceCover(sea)) && level.getBiome(probe).is(BiomeTags.IS_OCEAN)) {
                     return true;
                 }
